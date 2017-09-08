@@ -14,7 +14,7 @@ import TodoItem from './item'
 import TodoFooter from './footer'
 
 // vuex
-import { Store } from 'store/modules/todo'
+import { State, Getter, Mutation, Action } from 'store/modules/todo'
 
 @Component({
     name: 'view-todo',
@@ -26,15 +26,18 @@ import { Store } from 'store/modules/todo'
     }
 })
 export default class Todo extends Vue {
-    @Store.state('todos') allTodos: Types.todo.TodoItem[]
+    @State('todos') allTodos: Types.todo.TodoItem[]
 
-    @Store.getter('filterTodos') todos: Types.todo.TodoItem[]
+    @Getter('filterTodos') todos: Types.todo.TodoItem[]
 
-    @Store.mutation setFilter: (filter) => void
-    @Store.mutation clearData: () => void
+    @Mutation setFilter: (filter) => void
+    @Mutation clearData: () => void
 
-    @Store.action fetch: () => Promise<Types.todo.FetchStatus>
-    @Store.action save: () => Promise<any>
+    @Action
+    fetch: () => Promise<Types.todo.FetchStatus>
+
+    @Action
+    save: () => Promise<any>
 
     @Watch('todos', {deep: true})
     onTodosChange () {

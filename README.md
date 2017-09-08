@@ -65,38 +65,36 @@ export function decorator<D extends BindingHelper, T>(helper: D, keyMap: T) {
 将装饰器 export 出去
 ```ts
 import { getter, mutation, action, decorator } from '../utils/vuexUtil'
-export let Store = {
-    state: decorator(module.State, types.state),
-    getter: decorator(module.Getter, types.getter),
-    mutation: decorator(module.Mutation, types.mutation),
-    action: decorator(module.Action, types.action),
-}
+export let State = decorator(namespace(storeName, vState), types.state)
+export let Getter = decorator(namespace(storeName, vGetter), types.getter)
+export let Mutation = decorator(namespace(storeName, vMutation), types.mutation)
+export let Action = decorator(namespace(storeName, vAction), types.action)
 ```
 
 ### 使用
 以前的 types， modules 的方式可以不用改（建议改成新的），新的使用方式如下
 ```ts
-import { Store } from 'store/modules/someModule'
+import { State, Getter, Mutation, Action } from 'store/modules/someModule'
 
 export default class AwsomeComp extends Vue {
     // = @module.State(types.state.foo) foo: string
-    @Store.state foo: string
+    @State foo: string
 
     // = @module.State(types.state.foo) myFoo: stirng
-    @Store.state('foo') myFoo: string
+    @State('foo') myFoo: string
 
     // = @module.Getter(types.getter.bar) bar: string
-    @Store.getter bar: string
+    @Getter bar: string
 
     // = @module.Mutation(types.mutation.setFoo) setFoo: (foo: string) => void
-    @Store.mutation
+    @Mutation
     setFoo: (foo: string) => void
 
-    @Store.mutation('setFoo')
+    @Mutation('setFoo')
     setFooAlias: (foo: string) => void
 
     // = @module.Action(types.action.fetch) fetch: (payload: any) => Promise<String[]>
-    @Store.action
+    @Action
     fetch: (payload: any) => Promise<String[]>
 }
 ```

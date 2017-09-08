@@ -8,7 +8,7 @@ function getView (viewName) {
     return (resolve, reject) => {
         require.ensure([], (require) => {
             let map = {
-                'home': require('components/views/home')
+                'home': require('components/views/todo')
             }
 
             resolve(map[viewName])
@@ -19,7 +19,7 @@ function getView (viewName) {
 let routes: Router.RouteConfig[] = [
     {
         name: 'home',
-        path: '/'
+        path: '/:filter?'
     },
     {
         name: 'defaultView',

@@ -29,22 +29,20 @@ export function action<S, T extends ActionTree<S, RootState>>(state: S, actions:
 
 export function decorator<D extends BindingHelper, T>(helper: D, keyMap: T) {
     type KeyType = keyof T
+    type Decorator = (target, key: string) => any
 
-    function decoratorFactory(originKey?: undefined): (target, key: KeyType) => any
-    function decoratorFactory(originKey: KeyType): (target, key: string) => any
-    function decoratorFactory(originKey): any {
-        if (typeof originKey === 'string') {
-            return function (target, key: string) {
-                // Can't not use now
-                // return helper(target, key, originKey)
-                return helper(target, key)
-            }
-        } else {
-            return function (target, key: KeyType) {
-                return helper(target, key)
-            }
+    function decoratorWrapper(target, key: KeyType): void
+    function decoratorWrapper(originKey: KeyType): Decorator
+    function decoratorWrapper(a: any | KeyType, b?: KeyType): Decorator | void {
+        if (typeof b === 'string') {
+            const target = a
+            const key = b
+            return helper(target, key)
         }
+
+        const originKey = a
+        return helper(originKey)
     }
 
-    return decoratorFactory
+    return decoratorWrapper
 }
